@@ -3,6 +3,7 @@ package mx.florinda.cardapio;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,7 @@ public class Main {
         List<ItemCardapio> itens = database.listaItensCardapio();
         itens.stream()
                 .map(ItemCardapio::categoria)
-                .collect(Collectors.toSet())
+                .collect(Collectors.toCollection(LinkedHashSet::new))
                 .forEach(System.out::println);
 
 
