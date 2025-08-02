@@ -2,6 +2,7 @@ package mx.florinda.cardapio;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static mx.florinda.cardapio.ItemCardapio.CategoriaCardapio.*;
@@ -9,7 +10,7 @@ import static mx.florinda.cardapio.ItemCardapio.CategoriaCardapio.*;
 public class Database {
 
     public List<ItemCardapio> listaItensCardapio() {
-        List<ItemCardapio> itens = new ArrayList<>();
+        List<ItemCardapio> itens = new LinkedList<>();
 
         var refrescoDoChaves = new ItemCardapio(1L, "Refresco do Chaves",
                 "Suco de limão que parece de tamarindo e tem gosto de groselha.",
