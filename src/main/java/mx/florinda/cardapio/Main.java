@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static mx.florinda.cardapio.ItemCardapio.CategoriaCardapio.*;
 
@@ -22,6 +23,7 @@ public class Main {
         List<ItemCardapio> itens = database.listaItensCardapio();
         itens.stream()
                 .map(ItemCardapio::categoria)
+                .collect(Collectors.toSet())
                 .forEach(System.out::println);
 
 
