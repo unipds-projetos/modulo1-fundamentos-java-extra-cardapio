@@ -20,13 +20,9 @@ public class Main {
 
         Database database = new Database();
         List<ItemCardapio> itens = database.listaItensCardapio();
-        System.out.println(itens.size());
-
-        ItemCardapio itemCardapio = itens.get(2);
-        System.out.println(itemCardapio.nome());
-
-        itens.remove(1);
-        System.out.println(itens.size());
+        itens.stream()
+                .map(ItemCardapio::categoria)
+                .forEach(System.out::println);
 
 
 
