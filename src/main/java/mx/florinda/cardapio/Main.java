@@ -1,119 +1,10 @@
 package mx.florinda.cardapio;
 
-import com.google.gson.Gson;
-
-import java.math.BigDecimal;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static mx.florinda.cardapio.ItemCardapio.CategoriaCardapio.BEBIDAS;
+import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) {
-        ItemCardapio refrescoDoChaves = new ItemCardapio(1L, "Refresco do Chaves", """
-                Suco de limão que parece tamarindo e tem gosto de groselha
-                """, BEBIDAS,
-                new BigDecimal("2.99"), null);
-
-        Gson gson = new Gson();
-        String json = gson.toJson(refrescoDoChaves);
-        System.out.println(json);
-
+    public static void main(String[] args) throws InterruptedException, IOException {
         Database database = new Database();
-        List<ItemCardapio> itens = database.listaItensCardapio();
-
-        Comparator<ItemCardapio.CategoriaCardapio> categoriaComparator = Comparator.comparing(ItemCardapio.CategoriaCardapio::name);
-
-        Set<ItemCardapio.CategoriaCardapio> categoriasUnicas = new TreeSet<>();
-        for (ItemCardapio item : itens) {
-            categoriasUnicas.add(item.categoria());
-        }
-        for (ItemCardapio.CategoriaCardapio categoria : categoriasUnicas) {
-            System.out.println(categoria);
-        }
-
-        System.out.println("------------");
-
-        itens.stream()
-                .map(ItemCardapio::categoria)
-                .collect(Collectors.toCollection(() -> new TreeSet<>(categoriaComparator)))
-                .forEach(System.out::println);
-
-        System.out.println("============");
-
-        Map<ItemCardapio.CategoriaCardapio, Integer> itensPorCategoria = new TreeMap<>();
-        for (ItemCardapio item : itens) {
-            int quantidade;
-            if (itensPorCategoria.containsKey(item.categoria())) {
-                quantidade = itensPorCategoria.get(item.categoria()) + 1;
-            } else {
-                quantidade = 1;
-            }
-            itensPorCategoria.put(item.categoria(), quantidade);
-        }
-        for (ItemCardapio.CategoriaCardapio categoria : itensPorCategoria.keySet()) {
-            Integer quantidade = itensPorCategoria.get(categoria);
-            System.out.printf("%s: %d\n", categoria, quantidade);
-        }
-
-        System.out.println("------------");
-
-        itens.stream()
-                .collect(Collectors.groupingBy(
-                        ItemCardapio::categoria,
-                        TreeMap::new,
-                        Collectors.counting()
-                ))
-                .forEach((categoria, quantidade) ->
-                        System.out.printf("%s: %d\n", categoria, quantidade));
-
-        System.out.println("============");
-
-        Long id = 1L;
-
-        Optional<ItemCardapio> optionalItemCardapio = database.itemCardapioPorId(id);
-        if (optionalItemCardapio.isPresent()) {
-            ItemCardapio itemCardapio = optionalItemCardapio.get();
-            System.out.println(itemCardapio);
-        } else {
-            System.out.printf("Item de id %d não encontrado%n", id);
-        }
-
-        System.out.println("------------");
-
-        String mensagem = database.itemCardapioPorId(id)
-                .map(ItemCardapio::toString)
-                .orElse("Item de id %d não encontrado".formatted(id));
-        System.out.println(mensagem);
-
-        System.out.println("============");
-
-        Set<ItemCardapio.CategoriaCardapio> categoriasEmPromocao = new TreeSet<>();
-        categoriasEmPromocao.add(ItemCardapio.CategoriaCardapio.SOBREMESA);
-        categoriasEmPromocao.add(ItemCardapio.CategoriaCardapio.ENTRADAS);
-        categoriasEmPromocao.forEach(System.out::println);
-
-        System.out.println("------------");
-
-       Set.of(ItemCardapio.CategoriaCardapio.SOBREMESA, ItemCardapio.CategoriaCardapio.ENTRADAS)
-               .forEach(System.out::println);
-
-        System.out.println("------------");
-
-        EnumSet.of(ItemCardapio.CategoriaCardapio.SOBREMESA, ItemCardapio.CategoriaCardapio.ENTRADAS)
-                .forEach(System.out::println);
-
-
-        System.out.println("============");
-
-        EnumMap<ItemCardapio.CategoriaCardapio, String> promocoes = new EnumMap<>(ItemCardapio.CategoriaCardapio.class);
-        promocoes.put(ItemCardapio.CategoriaCardapio.SOBREMESA, "O doce perfeito para você!");
-        promocoes.put(ItemCardapio.CategoriaCardapio.ENTRADAS, "Comece sua refeição com um toque de sabor!");
-
-        String descricao = promocoes.get(ItemCardapio.CategoriaCardapio.ENTRADAS);
-        System.out.printf("Entradas:  %s\n", descricao);
-
-        System.out.println("============");
 
         HistoricoVisualizacao historico = new HistoricoVisualizacao(database);
         historico.registrarVisualizacao(1L); // refresco
@@ -122,7 +13,18 @@ public class Main {
         historico.registrarVisualizacao(1L); // refresco (de novo)
 
         historico.listaVisualizacoes();
+        historico.totalItensVisualizados();
 
+        long idParaRemover = 1L;
+        boolean removido = database.removeItemCardapio(idParaRemover);
+        System.out.printf("Item %d %s\n", idParaRemover, (removido ? "removido" : "não encontrado"));
+        database.listaItensCardapio().forEach(System.out::println);
+
+        System.out.println("\nSolicitando GC...");
+        System.gc();
+        Thread.sleep(500); // tempo para o GC agir
+
+        historico.listaVisualizacoes();
         historico.totalItensVisualizados();
     }
 
