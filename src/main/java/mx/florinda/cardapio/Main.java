@@ -113,6 +113,17 @@ public class Main {
         String descricao = promocoes.get(ItemCardapio.CategoriaCardapio.ENTRADAS);
         System.out.printf("Entradas:  %s\n", descricao);
 
+        System.out.println("============");
+
+        HistoricoVisualizacao historico = new HistoricoVisualizacao(database);
+        historico.registrarVisualizacao(1L); // refresco
+        historico.registrarVisualizacao(2L); // sanduiche
+        historico.registrarVisualizacao(6L); // pipoca
+        historico.registrarVisualizacao(1L); // refresco (de novo)
+
+        historico.listaVisualizacoes();
+
+        historico.totalItensVisualizados();
     }
 
 }
