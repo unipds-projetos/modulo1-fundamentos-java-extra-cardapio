@@ -10,11 +10,16 @@ public class Main {
         ItemCardapio item = database.itemCardapioPorId(1L).orElseThrow();
         System.out.printf("'%s': R$ %.2f\n", item.nome(), item.preco());
 
-        boolean alterado = database.alteraPrecoItemCardapio(1L, new BigDecimal("3.99"));
-        System.out.printf("%s\n", alterado ? "Preço alterado." : "Não encontrado.");
+        boolean alterado1 = database.alteraPrecoItemCardapio(1L, new BigDecimal("3.99"));
+        System.out.printf("%s\n", alterado1 ? "Preço alterado 1" : "Não encontrado.");
 
-        ItemCardapio itemAlterado = database.itemCardapioPorId(1L).orElseThrow();
-        System.out.printf("'%s': R$ %.2f\n", itemAlterado.nome(), itemAlterado.preco());
+        boolean alterado2 = database.alteraPrecoItemCardapio(1L, new BigDecimal("2.99"));
+        System.out.printf("%s\n", alterado2 ? "Preço alterado 2" : "Não encontrado.");
+
+        boolean alterado3 = database.alteraPrecoItemCardapio(1L, new BigDecimal("4.99"));
+        System.out.printf("%s\n", alterado3 ? "Preço alterado 3" : "Não encontrado.");
+
+        database.rastroAuditoriaPrecos();
     }
 
 }

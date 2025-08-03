@@ -8,6 +8,7 @@ import static mx.florinda.cardapio.ItemCardapio.CategoriaCardapio.*;
 public class Database {
     
     private final Map<Long, ItemCardapio> itensPorId = new HashMap<>();
+    private final Map<ItemCardapio, BigDecimal> auditoriaPrecos = new HashMap<>();
     
     public Database() {
         var refrescoDoChaves = new ItemCardapio(1L, "Refresco do Chaves",
@@ -59,7 +60,15 @@ public class Database {
         if (item == null ) return false;
         ItemCardapio itemPrecoAlterado = item.alteraPreco(novoPreco);
         itensPorId.put(id, itemPrecoAlterado);
+        auditoriaPrecos.put(item, novoPreco);
         return true;
+    }
+
+    public void rastroAuditoriaPrecos() {
+        System.out.println("\nAuditoria de preços:");
+        auditoriaPrecos.forEach((item, preco) ->
+                System.out.printf(" - %s: %s => %s\n", item.nome(), item.preco(), preco));
+        System.out.println();
     }
 
 }
