@@ -1,9 +1,7 @@
 package mx.florinda.cardapio;
 
-import java.io.IOException;
-
 public class Main {
-    public static void main(String[] args) throws InterruptedException, IOException {
+    public static void main(String[] args) throws InterruptedException {
         Database database = new Database();
 
         HistoricoVisualizacao historico = new HistoricoVisualizacao(database);
