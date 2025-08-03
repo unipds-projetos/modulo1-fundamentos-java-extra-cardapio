@@ -67,6 +67,23 @@ public class Main {
                 .forEach((categoria, quantidade) ->
                         System.out.printf("%s: %d\n", categoria, quantidade));
 
+        System.out.println("============");
 
+        Long id = 1L;
+
+        Optional<ItemCardapio> optionalItemCardapio = database.itemCardapioPorId(id);
+        if (optionalItemCardapio.isPresent()) {
+            ItemCardapio itemCardapio = optionalItemCardapio.get();
+            System.out.println(itemCardapio);
+        } else {
+            System.out.printf("Item de id %d não encontrado%n", id);
+        }
+
+        System.out.println("------------");
+
+        String mensagem = database.itemCardapioPorId(id)
+                .map(ItemCardapio::toString)
+                .orElse("Item de id %d não encontrado".formatted(id));
+        System.out.println(mensagem);
     }
 }
