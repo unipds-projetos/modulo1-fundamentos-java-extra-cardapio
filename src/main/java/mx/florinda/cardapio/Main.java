@@ -30,7 +30,7 @@ public class Main {
 
         System.out.println("------------");
 
-        Map<ItemCardapio.CategoriaCardapio, Integer> itensPorCategoria = new LinkedHashMap<>();
+        Map<ItemCardapio.CategoriaCardapio, Integer> itensPorCategoria = new TreeMap<>();
         for (ItemCardapio item : itens) {
             int quantidade;
             if (itensPorCategoria.containsKey(item.categoria())) {
@@ -50,7 +50,7 @@ public class Main {
         itens.stream()
                 .collect(Collectors.groupingBy(
                         ItemCardapio::categoria,
-                        LinkedHashMap::new,
+                        TreeMap::new,
                         Collectors.counting()
                 ))
                 .forEach((categoria, quantidade) ->
