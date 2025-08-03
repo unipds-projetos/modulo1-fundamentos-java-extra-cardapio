@@ -103,6 +103,16 @@ public class Main {
         EnumSet.of(ItemCardapio.CategoriaCardapio.SOBREMESA, ItemCardapio.CategoriaCardapio.ENTRADAS)
                 .forEach(System.out::println);
 
+
+        System.out.println("============");
+
+        EnumMap<ItemCardapio.CategoriaCardapio, String> promocoes = new EnumMap<>(ItemCardapio.CategoriaCardapio.class);
+        promocoes.put(ItemCardapio.CategoriaCardapio.SOBREMESA, "O doce perfeito para você!");
+        promocoes.put(ItemCardapio.CategoriaCardapio.ENTRADAS, "Comece sua refeição com um toque de sabor!");
+
+        String descricao = promocoes.get(ItemCardapio.CategoriaCardapio.ENTRADAS);
+        System.out.printf("Entradas:  %s\n", descricao);
+
     }
 
 }
