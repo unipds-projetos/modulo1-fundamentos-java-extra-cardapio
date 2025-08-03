@@ -23,12 +23,23 @@ public class Main {
         List<ItemCardapio> itens = database.listaItensCardapio();
 
         Comparator<ItemCardapio.CategoriaCardapio> categoriaComparator = Comparator.comparing(ItemCardapio.CategoriaCardapio::name);
+
+        Set<ItemCardapio.CategoriaCardapio> categoriasUnicas = new TreeSet<>();
+        for (ItemCardapio item : itens) {
+            categoriasUnicas.add(item.categoria());
+        }
+        for (ItemCardapio.CategoriaCardapio categoria : categoriasUnicas) {
+            System.out.println(categoria);
+        }
+
+        System.out.println("------------");
+
         itens.stream()
                 .map(ItemCardapio::categoria)
                 .collect(Collectors.toCollection(() -> new TreeSet<>(categoriaComparator)))
                 .forEach(System.out::println);
 
-        System.out.println("------------");
+        System.out.println("============");
 
         Map<ItemCardapio.CategoriaCardapio, Integer> itensPorCategoria = new TreeMap<>();
         for (ItemCardapio item : itens) {
