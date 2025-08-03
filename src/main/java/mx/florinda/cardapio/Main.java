@@ -85,5 +85,24 @@ public class Main {
                 .map(ItemCardapio::toString)
                 .orElse("Item de id %d não encontrado".formatted(id));
         System.out.println(mensagem);
+
+        System.out.println("============");
+
+        Set<ItemCardapio.CategoriaCardapio> categoriasEmPromocao = new TreeSet<>();
+        categoriasEmPromocao.add(ItemCardapio.CategoriaCardapio.SOBREMESA);
+        categoriasEmPromocao.add(ItemCardapio.CategoriaCardapio.ENTRADAS);
+        categoriasEmPromocao.forEach(System.out::println);
+
+        System.out.println("------------");
+
+       Set.of(ItemCardapio.CategoriaCardapio.SOBREMESA, ItemCardapio.CategoriaCardapio.ENTRADAS)
+               .forEach(System.out::println);
+
+        System.out.println("------------");
+
+        EnumSet.of(ItemCardapio.CategoriaCardapio.SOBREMESA, ItemCardapio.CategoriaCardapio.ENTRADAS)
+                .forEach(System.out::println);
+
     }
+
 }
