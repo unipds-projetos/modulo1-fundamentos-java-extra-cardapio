@@ -25,12 +25,12 @@ public class Main {
         Comparator<ItemCardapio.CategoriaCardapio> categoriaComparator = Comparator.comparing(ItemCardapio.CategoriaCardapio::name);
         itens.stream()
                 .map(ItemCardapio::categoria)
-                .collect(Collectors.toCollection(() -> new TreeSet<>()))
+                .collect(Collectors.toCollection(() -> new TreeSet<>(categoriaComparator)))
                 .forEach(System.out::println);
 
         System.out.println("------------");
 
-        Map<ItemCardapio.CategoriaCardapio, Integer> itensPorCategoria = new HashMap<>();
+        Map<ItemCardapio.CategoriaCardapio, Integer> itensPorCategoria = new LinkedHashMap<>();
         for (ItemCardapio item : itens) {
             int quantidade;
             if (itensPorCategoria.containsKey(item.categoria())) {
@@ -50,7 +50,7 @@ public class Main {
         itens.stream()
                 .collect(Collectors.groupingBy(
                         ItemCardapio::categoria,
-                        HashMap::new,
+                        LinkedHashMap::new,
                         Collectors.counting()
                 ))
                 .forEach((categoria, quantidade) ->
