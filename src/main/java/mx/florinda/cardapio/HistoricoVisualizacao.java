@@ -38,7 +38,7 @@ public class HistoricoVisualizacao {
     }
 
     public void totalItensVisualizados() {
-        System.out.printf("Total de itens únicos visualidos: " + visualizacoes.size());
+        System.out.printf("Total de itens únicos visualidos: %d\n", visualizacoes.size());
     }
 
 }
