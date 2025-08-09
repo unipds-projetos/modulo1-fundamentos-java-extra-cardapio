@@ -1,28 +1,37 @@
 package mx.florinda.cardapio;
 
 
-import java.math.BigDecimal;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.Map;
+import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
-        Database database = new Database();
+    public static void main(String[] args) throws IOException {
+        StringBuilder responseTextBuilder = new StringBuilder();
 
-        ItemCardapio item = database.itemCardapioPorId(1L).orElseThrow(); // 2.99
+        String viaCepURL = "https://viacep.com.br/ws/01001000/json/";
 
-        database.alteraPrecoItemCardapio(1L, new BigDecimal("3.99")); // 2.99 => 3.99
-        ItemCardapio item1 = database.itemCardapioPorId(1L).orElseThrow(); // 3.99
+        try (Scanner scanner = new Scanner(new URL(viaCepURL).openStream())) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                responseTextBuilder.append(line);
+            }
+        }
 
-        database.alteraPrecoItemCardapio(1L, new BigDecimal("2.99")); // 3.99 => 2.99
-        ItemCardapio item2 = database.itemCardapioPorId(1L).orElseThrow(); // 2.99
+        String responseText = responseTextBuilder.toString();
+        System.out.println(responseText);
 
-        database.alteraPrecoItemCardapio(1L, new BigDecimal("4.99")); // 2.99 => 4.99
-        ItemCardapio item3 = database.itemCardapioPorId(1L).orElseThrow(); // 4.99
+        Gson gson = new Gson();
+        Map<String, String> dadosCep = gson.fromJson(responseText, new TypeToken<>() {
+        });
+        System.out.printf("%s, %s/%s", dadosCep.get("logradouro"),
+                dadosCep.get("localidade"),
+                dadosCep.get("uf"));
 
-        System.out.println("== " + (item == item2));
-        System.out.println("equals() " + (item.equals(item2)));
-        System.out.println("hashCode() " + (item.hashCode() == item2.hashCode()));
-
-        database.rastroAuditoriaPrecos();
     }
 
 }
