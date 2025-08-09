@@ -1,36 +1,23 @@
 package mx.florinda.cardapio;
 
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import java.io.IOException;
-import java.net.URL;
-import java.util.Map;
-import java.util.Scanner;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        StringBuilder responseTextBuilder = new StringBuilder();
+    public static void main(String[] args) throws IOException, InterruptedException {
+        URI viaCepURI = URI.create("https://viacep.com.br/ws/01001000/json/");
 
-        String viaCepURL = "https://viacep.com.br/ws/01001000/json/";
-
-        try (Scanner scanner = new Scanner(new URL(viaCepURL).openStream())) {
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                responseTextBuilder.append(line);
-            }
+        try (HttpClient client = HttpClient.newBuilder().build()) {
+            HttpRequest request = HttpRequest.newBuilder().uri(viaCepURI).build();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println(response.statusCode());
+            String responseText = response.body();
+            System.out.println(responseText);
         }
-
-        String responseText = responseTextBuilder.toString();
-        System.out.println(responseText);
-
-        Gson gson = new Gson();
-        Map<String, String> dadosCep = gson.fromJson(responseText, new TypeToken<>() {
-        });
-        System.out.printf("%s, %s/%s", dadosCep.get("logradouro"),
-                dadosCep.get("localidade"),
-                dadosCep.get("uf"));
 
     }
 
