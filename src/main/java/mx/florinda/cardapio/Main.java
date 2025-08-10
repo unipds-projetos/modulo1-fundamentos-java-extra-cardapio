@@ -1,24 +1,22 @@
 package mx.florinda.cardapio;
 
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
-        URI viaCepURI = URI.create("https://viacep.com.br/ws/01001000/json/");
+        Database database = new Database();
+        List<ItemCardapio> itensCardapio = database.listaItensCardapio();
 
-        try (HttpClient client = HttpClient.newBuilder().build()) {
-            HttpRequest request = HttpRequest.newBuilder().uri(viaCepURI).build();
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response.statusCode());
-            String responseText = response.body();
-            System.out.println(responseText);
-        }
-
+        Gson gson = new Gson();
+        String json = gson.toJson(itensCardapio);
+        Path arquivoItens = Path.of("itensCardapio.json");
+        Files.writeString(arquivoItens, json);
     }
 
 }
