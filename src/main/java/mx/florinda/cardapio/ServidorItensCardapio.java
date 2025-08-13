@@ -1,37 +1,48 @@
 package mx.florinda.cardapio;
 
-import com.sun.net.httpserver.Headers;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpServer;
+import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.List;
 
 public class ServidorItensCardapio {
 
     public static void main(String[] args) throws IOException {
         int porta = 8000;
-        HttpServer httpServer = HttpServer.create(new InetSocketAddress(porta), 0);
-        httpServer.createContext("/itensCardapio.json", (HttpExchange exchange) -> {
-            Path arquivoItens = Path.of("itensCardapio.json");
-            String itensCardapioJson = Files.readString(arquivoItens);
+        try(ServerSocket serverSocket = new ServerSocket(porta)) {
+            System.out.println("Iniciando servidor na porta " + porta);
 
-            byte[] body = itensCardapioJson.getBytes(StandardCharsets.UTF_8);
+            try (Socket clientSocket = serverSocket.accept()) {
+                System.out.println("Conectou com cliente " + clientSocket.getInetAddress());
 
-            Headers responseHeaders = exchange.getResponseHeaders();
-            responseHeaders.add("Content-Type", "application/json; charset=UTF-8");
+                InputStream in = clientSocket.getInputStream();
 
-            exchange.sendResponseHeaders(200, body.length);
-            try(OutputStream responseBody = exchange.getResponseBody()){
-                responseBody.write(body);
+                StringBuilder requestBuilder = new StringBuilder();
+                int data;
+                do {
+                    data = in.read();
+                    requestBuilder.append((char) data);
+                } while(in.available()>0);
+
+                String request = requestBuilder.toString();
+                System.out.println(request);
+
+                Database database = new Database();
+                List<ItemCardapio> listaItensCardapio = database.listaItensCardapio();
+                Gson gson = new Gson();
+                String json = gson.toJson(listaItensCardapio);
+
+                PrintStream out = new PrintStream(clientSocket.getOutputStream());
+                out.println("HTTP/1.1 200 OK");
+                out.println("Content-Type: application/json; charset=UTF-8");
+                out.println("");
+                out.print(json);
             }
-        });
-        System.out.println("Iniciando servidor na porta " + porta);
-        httpServer.start();
+        }
     }
 
 }
