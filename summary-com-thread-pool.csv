@@ -1,0 +1,3 @@
+Label,# Samples,Average,Min,Max,Std. Dev.,Error %,Throughput,Received KB/sec,Sent KB/sec,Avg. Bytes
+GET Itens Cardápio JSON,5729,968,503,1038,133.57,0.000%,93.95500,100.93,12.29,1100.0
+TOTAL,5729,968,503,1038,133.57,0.000%,93.95500,100.93,12.29,1100.0
