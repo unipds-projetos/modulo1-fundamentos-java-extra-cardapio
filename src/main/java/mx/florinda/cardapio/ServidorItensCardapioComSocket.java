@@ -46,8 +46,6 @@ public class ServidorItensCardapioComSocket {
             Path path = Path.of("itensCardapio.json");
             String json = Files.readString(path);
 
-                    Thread.sleep(250);
-
             OutputStream clientOS = clientSocket.getOutputStream();
             PrintStream clientOut = new PrintStream(clientOS);
 
