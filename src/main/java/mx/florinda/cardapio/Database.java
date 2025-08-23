@@ -2,13 +2,13 @@ package mx.florinda.cardapio;
 
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 import static mx.florinda.cardapio.ItemCardapio.CategoriaCardapio.*;
 
 public class Database {
     
-    private final Map<Long, ItemCardapio> itensPorId = new ConcurrentHashMap<>();
+    private final Map<Long, ItemCardapio> itensPorId = new ConcurrentSkipListMap<>();
     private final Map<ItemCardapio, BigDecimal> auditoriaPrecos = new IdentityHashMap<>();
     
     public Database() {
